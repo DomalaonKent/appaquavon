@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
-import '../../services/api_service.dart';
-import '../../theme/app_theme.dart';
+import '../../services/api.service.dart';  
+import '../../theme/app.theme.dart';    
 
 class PlaceOrderScreen extends StatefulWidget {
   const PlaceOrderScreen({super.key});
@@ -252,6 +252,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
           decoration: const InputDecoration(hintText: 'Enter your address'),
         ),
         actions: [
+
           TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
           ElevatedButton(onPressed: () => Navigator.pop(ctx, ctrl.text), child: const Text('Save')),
         ],
@@ -260,74 +261,3 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
     if (result != null && result.isNotEmpty) setState(() => _address = result);
   }
 }
-
-class _QuantityStepper extends StatelessWidget {
-  final int value;
-  final ValueChanged<int> onChanged;
-  const _QuantityStepper({required this.value, required this.onChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _Btn(icon: Icons.remove, onTap: value > 1 ? () => onChanged(value - 1) : null),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Text('$value', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-        ),
-        _Btn(icon: Icons.add, onTap: () => onChanged(value + 1)),
-      ],
-    );
-  }
-}
-
-class _Btn extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback? onTap;
-  const _Btn({required this.icon, this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 32,
-        height: 32,
-        decoration: BoxDecoration(
-          border: Border.all(color: onTap != null ? AppColors.primary : AppColors.divider),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(icon, size: 18, color: onTap != null ? AppColors.primary : AppColors.textLight),
-      ),
-    );
-  }
-}
-
-class _DeliveryOption extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final bool selected;
-  final VoidCallback onTap;
-  const _DeliveryOption({required this.icon, required this.title, required this.subtitle, required this.selected, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: selected ? AppColors.primaryLight : AppColors.bgGray,
-          border: Border.all(color: selected ? AppColors.primary : Colors.transparent, width: 1.5),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: selected ? AppColors.primary : AppColors.textMid),
-            const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: TextStyle(fontWeight: FontWeight.w600, color: selected ? AppColors.primary : AppColors.textDark)),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../theme/app_theme.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Idinagdag ito para gumana ang SharedPreferences
+import '../../services/api.service.dart'; 
+import '../../theme/app.theme.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

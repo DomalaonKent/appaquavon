@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
-import '../../services/api_service.dart';
-import '../../theme/app_theme.dart';
+import '../../services/api.service.dart'; // Pinalitan ang _ ng .
+import '../../theme/app.theme.dart';     // Pinalitan ang _ ng .
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -160,7 +160,7 @@ class _MenuItem extends StatelessWidget {
       child: ListTile(
         leading: Icon(icon, color: color ?? AppColors.textDark),
         title: Text(label, style: TextStyle(color: color ?? AppColors.textDark)),
-        trailing: color == null ? const Icon(Icons.chevron_right, color: AppColors.textLight) : null,
+        trailing: color == null ? Icon(Icons.chevron_right, color: AppColors.textLight) : null, // Inalis ang const dito
         onTap: onTap,
       ),
     );
