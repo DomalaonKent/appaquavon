@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../services/api.service.dart'; 
+import '../../services/api.service.dart';
 import '../../theme/app.theme.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -26,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(res['data']['detail'] ?? 'Login failed'),
+          content: Text(res['data']['message'] ?? 'Login failed'),
           backgroundColor: AppColors.danger,
         ),
       );
@@ -43,132 +43,265 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 40),
-              Container(
-                width: 80,
-                height: 80,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFF0EA5E9), Color(0xFF1A56DB)],
-                  ),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.water_drop, color: Colors.white, size: 44),
+      body: Stack(
+        children: [
+          // ── Blue gradient background ──
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF0077B6), Color(0xFF0096C7), Color(0xFF90E0EF)],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
-              const SizedBox(height: 16),
-              const Text(
-                'AQUAVON',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.primary,
-                  letterSpacing: 2,
+            ),
+          ),
+
+          // ── White rounded bottom sheet ──
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.50,
+              decoration: const BoxDecoration(
+                color: Color(0xFFEAF4FF),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(36),
+                  topRight: Radius.circular(36),
                 ),
               ),
-              const Text(
-                'Water Refilling Station',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: AppColors.textMid,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-              const SizedBox(height: 48),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF0EA5E9), Color(0xFF1A56DB)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: const Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Pure. Safe. Refreshing.',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 16,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            'Water you can trust,\nnow just a tap away!',
-                            style: TextStyle(color: Colors.white70, fontSize: 12),
-                          ),
-                        ],
+            ),
+          ),
+
+          // ── Main content ──
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+
+                  // Brand image
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.asset(
+                        'assets/images/brand.png',
+                        height: 180,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
                       ),
                     ),
-                    Icon(Icons.water_drop_outlined, color: Colors.white54, size: 48),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 32),
-              TextField(
-                controller: _phoneCtrl,
-                keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(
-                  labelText: 'Phone Number',
-                  prefixIcon: Icon(Icons.phone_outlined),
-                  hintText: '09XX XXX XXXX',
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _passCtrl,
-                obscureText: _obscure,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  prefixIcon: const Icon(Icons.lock_outlined),
-                  suffixIcon: IconButton(
-                    icon: Icon(_obscure ? Icons.visibility_off : Icons.visibility),
-                    onPressed: () => setState(() => _obscure = !_obscure),
                   ),
-                ),
+
+                  const SizedBox(height: 20),
+
+                  // Welcome text
+                  const Text(
+                    'Welcome!',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF03045E),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Pure and Safe Water, Delivered to You.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Color(0xFF023E8A),
+                    ),
+                  ),
+
+                  const SizedBox(height: 28),
+
+                  // ── Form ──
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 28),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Email or Phone Number',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF03045E),
+                            fontSize: 13,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        TextField(
+                          controller: _phoneCtrl,
+                          keyboardType: TextInputType.phone,
+                          decoration: InputDecoration(
+                            hintText: 'Enter your email or phone number',
+                            prefixIcon: const Icon(Icons.person_outline,
+                                color: Colors.grey),
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 14),
+
+                        const Text(
+                          'Password',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF03045E),
+                            fontSize: 13,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        TextField(
+                          controller: _passCtrl,
+                          obscureText: _obscure,
+                          decoration: InputDecoration(
+                            hintText: 'Enter your password',
+                            prefixIcon: const Icon(Icons.lock_outline,
+                                color: Colors.grey),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscure
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () =>
+                                  setState(() => _obscure = !_obscure),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {},
+                            child: const Text(
+                              'Forgot Password?',
+                              style: TextStyle(
+                                color: Color(0xFF0096C7),
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // Login button
+                        SizedBox(
+                          width: double.infinity,
+                          height: 52,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF1A56DB),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              elevation: 2,
+                            ),
+                            onPressed: _loading ? null : _login,
+                            child: _loading
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const Text(
+                                    'Login',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // OR divider
+                        Row(
+                          children: [
+                            Expanded(
+                                child: Divider(color: Colors.grey.shade400)),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text('OR',
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 12)),
+                            ),
+                            Expanded(
+                                child: Divider(color: Colors.grey.shade400)),
+                          ],
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // Create Account button
+                        SizedBox(
+                          width: double.infinity,
+                          height: 52,
+                          child: OutlinedButton.icon(
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(
+                                  color: Color(0xFF03045E), width: 1.5),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                            ),
+                            onPressed: () =>
+                                Navigator.pushNamed(context, '/register'),
+                            icon: const Icon(Icons.person_add_outlined,
+                                color: Color(0xFF03045E)),
+                            label: const Text(
+                              'Create Account',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF03045E),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        // Continue as Guest
+                        Center(
+                          child: TextButton(
+                            onPressed: () =>
+                                Navigator.pushReplacementNamed(context, '/home'),
+                            child: const Text(
+                              'Continue as Guest',
+                              style: TextStyle(
+                                color: Color(0xFF0096C7),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 28),
-              ElevatedButton(
-                onPressed: _loading ? null : _login,
-                child: _loading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                            color: Colors.white, strokeWidth: 2),
-                      )
-                    : const Text('Login'),
-              ),
-              const SizedBox(height: 12),
-              OutlinedButton(
-                onPressed: () => Navigator.pushNamed(context, '/register'),
-                child: const Text('Create Account'),
-              ),
-              const SizedBox(height: 16),
-              TextButton(
-                onPressed: () => Navigator.pushReplacementNamed(context, '/home'),
-                child: const Text(
-                  'Continue as Guest',
-                  style: TextStyle(color: AppColors.primary),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
